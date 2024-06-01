@@ -1,0 +1,13 @@
+.news-item {
+    margin-bottom: 20px;
+}
+
+.news-title {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.news-description {
+    font-size: 14px;
+    color: #666;
+}

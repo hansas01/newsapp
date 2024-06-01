@@ -3,57 +3,67 @@ const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
 
 async function fetchNews() {
     try {
-      const response = await fetch(url);
-      const data = await response.json();
-      console.log(data);
-      // TODO: Add a function call to display the news
-      displayNews(data.articles); // Call the function to display the news
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(data);
+        // Call the function to display the news
+        displayNews(data.articles);
     } catch (error) {
-      console.error('There was an error!', error);
+        console.error('There was an error!', error);
     }
-  }
+}
 
-  function displayNews(articles) {
+function displayNews(articles) {
     const newsDiv = document.querySelector('#news');
 
-    for (const article of articles) {
-        const articleDiv = document.createElement('div');
+ // Create a row div for each set of three articles
+ for (let i = 0; i < articles.length; i += 3) {
+    const row = document.createElement('div');
+    row.classList.add('row');
 
-        //create and append a headline to the articleDiv
-        const title = document.createElement('h4');
-        title.textContent = article.title;
-        articleDiv.appendChild(title);
-    
-      // TODO: Use document.createElement and appendChild to create and append more elements
-    
-      newsDiv.appendChild(articleDiv);
+    // Loop through the next three articles or until the end of the articles array
+    for (let j = i; j < i + 3 && j < articles.length; j++) {
+        const article = articles[j];
+
+            //Exclude articles where the image URL is null or undefined
+            if (!article.urlToImage) {
+            continue;
+            }
+         
+            // Create a div for each article
+            const articleDiv = document.createElement('div');
+            articleDiv.classList.add('col-md-3', 'mb-3'); // Bootstrap classes for column layout and margin-bottom
+
+            // Create and append the image to the articleDiv
+            const image = document.createElement('img');
+            image.src = article.urlToImage;
+            image.classList.add('img-fluid', 'rounded'); // Make the image responsive with Bootstrap
+            articleDiv.appendChild(image);
+
+            // Create a container for the article details
+            const detailsContainer = document.createElement('div');
+
+            // Create and append a headline to the detailsContainer
+            const title = document.createElement('h4');
+            title.textContent = article.title;
+            detailsContainer.appendChild(title);
+
+            // Create and append the author to the detailsContainer
+            const author = document.createElement('p');
+            author.textContent = article.author ? `Author: ${article.author}` : 'Author: Unknown';
+            detailsContainer.appendChild(author);
+
+            // Append the detailsContainer to the articleDiv
+            articleDiv.appendChild(detailsContainer);
+
+            // Append the articleDiv to the row
+            row.appendChild(articleDiv);
+        }
+
+        // Append the row to the newsDiv
+        newsDiv.appendChild(row);
     }
 }
 
-
-/*
-function displayNews(newsData) {
-    const newsContainer = document.getElementById('news');
-    newsContainer.innerHTML = ''; // Clear previous news items
-    
-    newsData.forEach(newsItem => {
-        const newsItemElement = document.createElement('div');
-        newsItemElement.classList.add('news-item');
-        
-        const titleElement = document.createElement('h2');
-        titleElement.textContent = newsItem.title;
-        
-        const descriptionElement = document.createElement('p');
-        descriptionElement.textContent = newsItem.description;
-        
-        // You can add more elements for displaying additional information
-        
-        newsItemElement.appendChild(titleElement);
-        newsItemElement.appendChild(descriptionElement);
-        
-        newsContainer.appendChild(newsItemElement);
-    });
-}
-  */
 fetchNews();
   
